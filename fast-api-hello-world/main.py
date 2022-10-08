@@ -77,14 +77,16 @@ def show_person(
         min_length=3,
         max_length=20,
         title="Person name",
-        description="This is the person name"
+        description="This is the person name",
+        example="Sergio"
     ),
     age: Optional[int] = Query(
         ...,
         gt=0,
         lt=100,
         title="Person age",
-        description="This is the person age. It's required"
+        description="This is the person age. It's required",
+        example=26
     )
 ) -> Dict:
     return {
@@ -95,7 +97,11 @@ def show_person(
 
 @app.get("person/detail/{person_id}")
 def show_person(
-    person_id: int = Path(..., gt=0)
+    person_id: int = Path(
+        ...,
+        gt=0,
+        example=1
+    )
 ) -> Dict:
     return {
         "person_id": person_id
