@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from fastapi import FastAPI, Body, Path, Query
+from fastapi import FastAPI, Body, Path, Query, status
 
 app: FastAPI = FastAPI(
     title="Person API"
@@ -78,19 +78,29 @@ class Address(BaseModel):
         }
 
 
-@app.get("/")
+@app.get(
+    path="/",
+    status_code=status.HTTP_200_OK
+)
 def home() -> Dict:
     return {
         "body": "Hello World"
     }
 
 
-@app.post("/person/new", response_model=PersonResponse)
+@app.post(
+    path="/person/new",
+    response_model=PersonResponse,
+    status_code=status.HTTP_201_CREATED
+)
 def create_person(person: Person = Body(...)) -> PersonResponse:
     return person
 
 
-@app.get("/person/detail")
+@app.get(
+    path="/person/detail",
+    status_code=status.HTTP_200_OK
+)
 def show_person(
     name: Optional[str] = Query(
         None,
@@ -115,7 +125,10 @@ def show_person(
     }
 
 
-@app.get("person/detail/{person_id}")
+@app.get(
+    path="person/detail/{person_id}",
+    status_code=status.HTTP_200_OK
+)
 def show_person(
     person_id: int = Path(
         ...,
@@ -128,7 +141,10 @@ def show_person(
     }
 
 
-@app.put("/person/{person_id}")
+@app.put(
+    path="/person/{person_id}",
+    status_code=status.HTTP_200_OK
+)
 def update_person(
     person_id: int = Path(
         ...,
