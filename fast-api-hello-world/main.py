@@ -4,7 +4,9 @@ from pydantic import BaseModel
 
 from fastapi import FastAPI, Body, Path, Query
 
-app: FastAPI = FastAPI()
+app: FastAPI = FastAPI(
+    title="Person API"
+)
 
 # Models
 
@@ -15,6 +17,12 @@ class Person(BaseModel):
     age: int
     hair_color: Optional[str] = None
     is_married: Optional[bool] = None
+
+
+class Address(BaseModel):
+    city: str
+    state: str
+    country: str
 
 
 @app.get("/")
@@ -59,3 +67,20 @@ def show_person(
     return {
         "person_id": person_id
     }
+
+
+@app.put("/person/{person_id}")
+def update_person(
+    person_id: int = Path(
+        ...,
+        title="Person ID",
+        description="This is the person ID",
+        gt=0
+    ),
+    person: Person = Body(...),
+    address: Address = Body(...)
+) -> Dict:
+    results = person.dict()
+    results.update(address.dict())
+
+    return results
