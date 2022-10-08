@@ -2,7 +2,7 @@ from typing import Dict, Optional
 
 from pydantic import BaseModel
 
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Query
 
 app: FastAPI = FastAPI()
 
@@ -27,3 +27,14 @@ def home() -> Dict:
 @app.post("/person/new")
 def create_person(person: Person = Body(...)) -> Person:
     return person
+
+
+@app.get("/person/detail")
+def show_person(
+    name: Optional[str] = Query(None, min_length=3, max_length=20),
+    age: Optional[int] = Query(...)
+):
+    return {
+        "name": name,
+        "age": age
+    }
