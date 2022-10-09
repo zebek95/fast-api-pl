@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, EmailStr, Field
 
-from fastapi import Cookie, FastAPI, Body, Header, Path, Query, status, Form
+from fastapi import Cookie, FastAPI, Body, File, Header, Path, Query, UploadFile, status, Form
 
 app: FastAPI = FastAPI(
     title="Person API"
@@ -205,3 +205,16 @@ def contact(
     ads: Optional[str] = Cookie(default=None)
 ):
     return user_agent
+
+
+@app.post(
+    path="/upload-photo"
+)
+def upload_photo(
+    image: UploadFile = File(...)
+):
+    return {
+        "file_name": image.filename,
+        "format": image.content_type,
+        "size": len(image.file.read())
+    }
