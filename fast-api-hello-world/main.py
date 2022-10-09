@@ -1,9 +1,9 @@
 from typing import Dict, Optional
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
-from fastapi import FastAPI, Body, Path, Query, status, Form
+from fastapi import Cookie, FastAPI, Body, Header, Path, Query, status, Form
 
 app: FastAPI = FastAPI(
     title="Person API"
@@ -179,3 +179,29 @@ def login(
     password: str = Form(...)
 ) -> LoginResponse:
     return LoginResponse(username=username)
+
+
+@app.post(
+    path="/contact",
+    status_code=status.HTTP_200_OK
+)
+def contact(
+    firts_name: str = Form(
+        ...,
+        max_length=20,
+        min_length=4,
+    ),
+    last_name: str = Form(
+        ...,
+        max_length=20,
+        min_length=4,
+    ),
+    email: EmailStr = Form(...),
+    message: str = Form(
+        ...,
+        min_length=10
+    ),
+    user_agent: Optional[str] = Header(default=None),
+    ads: Optional[str] = Cookie(default=None)
+):
+    return user_agent
