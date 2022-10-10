@@ -103,6 +103,17 @@ def home() -> Dict:
     tags=["Persons"]
 )
 def create_person(person: Person = Body(...)) -> PersonResponse:
+    """
+    Create a new person
+
+    This service create a new person in the app
+
+    Params
+    - Request body params
+        - **person: Person** -> A person model
+
+    Returns a person model
+    """
     return person
 
 
